@@ -2,7 +2,7 @@ import { Server as IOServer } from 'socket.io';
 import { Server as HTTPServer } from 'http';
 import { NextApiRequest } from 'next';
 import { NextApiResponse } from 'next';
-import { GameMove, Player, GameStatus, Game } from '../types';
+import { GameMove, GameStatus } from '../types';
 import { applyMove, isValidMove } from './game-utils';
 import { getGame, getPlayer, updateGame, updatePlayer } from './db';
 
@@ -161,9 +161,13 @@ export function initSocketServer(httpServer: HTTPServer) {
 }
 
 // For Next.js API routes compatibility
-export const socketIOMiddleware = (req: NextApiRequest & { socket: any }, res: NextApiResponse, next: () => void) => {
+export const socketIOMiddleware = (
+  req: NextApiRequest & { socket: { server: Record<string, unknown> } }, 
+  res: NextApiResponse, 
+  next: () => void
+) => {
   if (!req.socket.server.io) {
-    const httpServer = req.socket.server as HTTPServer;
+    const httpServer = req.socket.server as unknown as HTTPServer;
     req.socket.server.io = initSocketServer(httpServer);
   }
   next();

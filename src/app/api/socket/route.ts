@@ -14,7 +14,7 @@ if (process.env.NODE_ENV !== 'production') {
   });
 }
 
-export async function GET(_request: NextRequest) {
+export async function GET() {
   return NextResponse.json({ 
     success: true, 
     message: 'Socket.io server is running',

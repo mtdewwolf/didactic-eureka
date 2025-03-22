@@ -4,7 +4,7 @@ import { createTournament } from '@/lib/game-utils';
 import { Player } from '@/types';
 
 // Get all active tournaments
-export async function GET(_request: NextRequest) {
+export async function GET() {
   try {
     const tournaments = await getActiveTournaments();
     return NextResponse.json({ success: true, tournaments });

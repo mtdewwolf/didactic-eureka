@@ -67,9 +67,9 @@ export const PlayerProvider: React.FC<PlayerProviderProps> = ({ children }) => {
       // Set the player in state and localStorage
       setPlayer(data.player);
       localStorage.setItem('tictactoe_player', JSON.stringify(data.player));
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Login error:', err);
-      setError(err.message || 'An error occurred during login');
+      setError(err instanceof Error ? err.message : 'An error occurred during login');
     } finally {
       setIsLoading(false);
     }

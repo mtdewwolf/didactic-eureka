@@ -62,7 +62,7 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
             setGameState(game);
           });
           
-          socketInstance.on('error', (error: any) => {
+          socketInstance.on('error', (error: Error | string | unknown) => {
             console.error('Socket error:', error);
           });
           

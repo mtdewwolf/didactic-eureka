@@ -1,34 +1,35 @@
 import { sql } from '@vercel/postgres';
 import { Game, Player, Tournament } from '../types';
+import { QueryResultRow } from '@vercel/postgres';
 
-// Type converters
-const toPlayer = (row: any): Player => ({
-  id: row.id,
-  name: row.name,
-  currentGameId: row.current_game_id,
-  tournamentId: row.tournament_id
+// Type converters - using QueryResultRow type
+const toPlayer = (row: QueryResultRow): Player => ({
+  id: row.id as string,
+  name: row.name as string,
+  currentGameId: row.current_game_id as string | undefined,
+  tournamentId: row.tournament_id as string | undefined
 });
 
-const toGame = (row: any): Game => ({
-  id: row.id,
-  board: row.board,
-  players: row.players,
-  currentTurn: row.current_turn,
-  winner: row.winner,
-  status: row.status,
-  tournamentId: row.tournament_id,
-  nextRoundGameId: row.next_round_game_id
+const toGame = (row: QueryResultRow): Game => ({
+  id: row.id as string,
+  board: row.board as Game['board'],
+  players: row.players as Game['players'],
+  currentTurn: row.current_turn as 'x' | 'o',
+  winner: row.winner as string | null,
+  status: row.status as Game['status'],
+  tournamentId: row.tournament_id as string | undefined,
+  nextRoundGameId: row.next_round_game_id as string | undefined
 });
 
-const toTournament = (row: any): Tournament => ({
-  id: row.id,
-  name: row.name,
-  status: row.status,
-  players: row.players,
-  games: row.games,
-  rounds: row.rounds,
-  currentRound: row.current_round,
-  winnerId: row.winner_id
+const toTournament = (row: QueryResultRow): Tournament => ({
+  id: row.id as string,
+  name: row.name as string,
+  status: row.status as Tournament['status'],
+  players: row.players as string[],
+  games: row.games as string[],
+  rounds: row.rounds as number,
+  currentRound: row.current_round as number,
+  winnerId: row.winner_id as string | null
 });
 
 // Player operations
