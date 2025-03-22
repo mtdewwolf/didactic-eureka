@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getGame, updateGame } from '@/lib/db';
-import { applyMove, checkWinner, isValidMove } from '@/lib/game-utils';
-import { Game, GameMove, GameStatus } from '@/types';
+import { applyMove, isValidMove } from '@/lib/game-utils';
+import { GameMove, GameStatus } from '@/types';
 
 type Params = {
   params: {
