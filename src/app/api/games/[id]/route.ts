@@ -6,10 +6,10 @@ import { GameMove, GameStatus } from '@/types';
 // Get game by ID
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id } = await params;
     const game = await getGame(id);
     
     if (!game) {
@@ -35,10 +35,10 @@ export async function GET(
 // Make a move in a game
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id } = await params;
     const game = await getGame(id);
     
     if (!game) {

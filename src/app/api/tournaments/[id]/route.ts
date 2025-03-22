@@ -6,10 +6,10 @@ import { Game } from '@/types';
 // Get tournament by ID with games
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id } = await params;
     const tournament = await getTournament(id);
     
     if (!tournament) {
@@ -38,10 +38,10 @@ export async function GET(
 // Start or advance tournament
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
+    const { id } = await params;
     const tournament = await getTournament(id);
     
     if (!tournament) {
