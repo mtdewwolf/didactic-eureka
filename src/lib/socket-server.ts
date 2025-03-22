@@ -81,7 +81,7 @@ export function initSocketServer(httpServer: HTTPServer) {
     
     // Player makes a move
     socket.on('make-move', async (move: GameMove) => {
-      const { gameId, playerId, position } = move;
+      const { gameId } = move;
       
       // Validate and process the move
       const game = await getGame(gameId);
