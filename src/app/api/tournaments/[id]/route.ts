@@ -3,19 +3,13 @@ import { createGame, getTournament, getTournamentGames, updateTournament } from 
 import { generateNextRoundMatches } from '@/lib/game-utils';
 import { Game } from '@/types';
 
-type Params = {
-  params: {
-    id: string;
-  };
-};
-
 // Get tournament by ID with games
 export async function GET(
   request: NextRequest,
-  params: Params
+  { params }: { params: { id: string } }
 ) {
   try {
-    const { id } = params.params;
+    const { id } = params;
     const tournament = await getTournament(id);
     
     if (!tournament) {
@@ -44,10 +38,10 @@ export async function GET(
 // Start or advance tournament
 export async function POST(
   request: NextRequest,
-  params: Params
+  { params }: { params: { id: string } }
 ) {
   try {
-    const { id } = params.params;
+    const { id } = params;
     const tournament = await getTournament(id);
     
     if (!tournament) {

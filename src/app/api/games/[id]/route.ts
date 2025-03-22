@@ -3,19 +3,13 @@ import { getGame, updateGame } from '@/lib/db';
 import { applyMove, isValidMove } from '@/lib/game-utils';
 import { GameMove, GameStatus } from '@/types';
 
-type Params = {
-  params: {
-    id: string;
-  };
-};
-
 // Get game by ID
 export async function GET(
   request: NextRequest,
-  params: Params
+  { params }: { params: { id: string } }
 ) {
   try {
-    const { id } = params.params;
+    const { id } = params;
     const game = await getGame(id);
     
     if (!game) {
@@ -41,10 +35,10 @@ export async function GET(
 // Make a move in a game
 export async function POST(
   request: NextRequest,
-  params: Params
+  { params }: { params: { id: string } }
 ) {
   try {
-    const { id } = params.params;
+    const { id } = params;
     const game = await getGame(id);
     
     if (!game) {
