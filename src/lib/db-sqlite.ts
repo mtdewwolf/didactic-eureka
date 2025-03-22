@@ -62,6 +62,36 @@ function initializeDatabase() {
 // Initialize the database
 initializeDatabase();
 
+// Define row type interfaces
+interface PlayerRow {
+  id: string;
+  name: string;
+  current_game_id: string | null;
+  tournament_id: string | null;
+}
+
+interface GameRow {
+  id: string;
+  board: string;
+  players: string;
+  current_turn: string;
+  winner: string | null;
+  status: string;
+  tournament_id: string | null;
+  next_round_game_id: string | null;
+}
+
+interface TournamentRow {
+  id: string;
+  name: string;
+  status: string;
+  players: string;
+  games: string;
+  rounds: number;
+  current_round: number;
+  winner_id: string | null;
+}
+
 // Prepared statements
 const createPlayerStmt = db.prepare(`
   INSERT INTO players (id, name, current_game_id, tournament_id)
@@ -131,16 +161,16 @@ const getTournamentGamesStmt = db.prepare(`
 `);
 
 // Helper functions to convert between DB rows and app types
-function playerFromRow(row: any): Player {
+function playerFromRow(row: PlayerRow): Player {
   return {
     id: row.id,
     name: row.name,
-    currentGameId: row.current_game_id,
-    tournamentId: row.tournament_id
+    currentGameId: row.current_game_id || undefined,
+    tournamentId: row.tournament_id || undefined
   };
 }
 
-function gameFromRow(row: any): Game {
+function gameFromRow(row: GameRow): Game {
   return {
     id: row.id,
     board: JSON.parse(row.board) as Board,
@@ -148,12 +178,12 @@ function gameFromRow(row: any): Game {
     currentTurn: row.current_turn as 'x' | 'o',
     winner: row.winner,
     status: row.status as GameStatus,
-    tournamentId: row.tournament_id,
-    nextRoundGameId: row.next_round_game_id
+    tournamentId: row.tournament_id || undefined,
+    nextRoundGameId: row.next_round_game_id || undefined
   };
 }
 
-function tournamentFromRow(row: any): Tournament {
+function tournamentFromRow(row: TournamentRow): Tournament {
   return {
     id: row.id,
     name: row.name,
@@ -171,12 +201,12 @@ export async function createPlayer(name: string): Promise<Player> {
   const id = uuidv4();
   createPlayerStmt.run(id, name, null, null);
   
-  const row = getPlayerStmt.get(id);
+  const row = getPlayerStmt.get(id) as PlayerRow;
   return playerFromRow(row);
 }
 
 export async function getPlayer(id: string): Promise<Player | null> {
-  const row = getPlayerStmt.get(id);
+  const row = getPlayerStmt.get(id) as PlayerRow | undefined;
   return row ? playerFromRow(row) : null;
 }
 
@@ -188,7 +218,7 @@ export async function updatePlayer(player: Player): Promise<Player> {
     player.id
   );
   
-  const row = getPlayerStmt.get(player.id);
+  const row = getPlayerStmt.get(player.id) as PlayerRow;
   return playerFromRow(row);
 }
 
@@ -206,12 +236,12 @@ export async function createGame(game: Omit<Game, 'id'>): Promise<Game> {
     game.nextRoundGameId || null
   );
   
-  const row = getGameStmt.get(id);
+  const row = getGameStmt.get(id) as GameRow;
   return gameFromRow(row);
 }
 
 export async function getGame(id: string): Promise<Game | null> {
-  const row = getGameStmt.get(id);
+  const row = getGameStmt.get(id) as GameRow | undefined;
   return row ? gameFromRow(row) : null;
 }
 
@@ -227,7 +257,7 @@ export async function updateGame(game: Game): Promise<Game> {
     game.id
   );
   
-  const row = getGameStmt.get(game.id);
+  const row = getGameStmt.get(game.id) as GameRow;
   return gameFromRow(row);
 }
 
@@ -245,12 +275,12 @@ export async function createTournament(tournament: Omit<Tournament, 'id'>): Prom
     tournament.winnerId || null
   );
   
-  const row = getTournamentStmt.get(id);
+  const row = getTournamentStmt.get(id) as TournamentRow;
   return tournamentFromRow(row);
 }
 
 export async function getTournament(id: string): Promise<Tournament | null> {
-  const row = getTournamentStmt.get(id);
+  const row = getTournamentStmt.get(id) as TournamentRow | undefined;
   return row ? tournamentFromRow(row) : null;
 }
 
@@ -266,17 +296,17 @@ export async function updateTournament(tournament: Tournament): Promise<Tourname
     tournament.id
   );
   
-  const row = getTournamentStmt.get(tournament.id);
+  const row = getTournamentStmt.get(tournament.id) as TournamentRow;
   return tournamentFromRow(row);
 }
 
 export async function getActiveTournaments(): Promise<Tournament[]> {
-  const rows = getActiveTournamentsStmt.all();
+  const rows = getActiveTournamentsStmt.all() as TournamentRow[];
   return rows.map(tournamentFromRow);
 }
 
 export async function getTournamentGames(tournamentId: string): Promise<Game[]> {
-  const rows = getTournamentGamesStmt.all(tournamentId);
+  const rows = getTournamentGamesStmt.all(tournamentId) as GameRow[];
   return rows.map(gameFromRow);
 }
 
