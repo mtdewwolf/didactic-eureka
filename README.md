@@ -90,3 +90,62 @@ This application is designed to be deployed on Vercel.
 ## License
 
 This project is open source and available under the [MIT License](LICENSE).
+
+### Database Setup
+
+This application uses SQLite for data storage. The database will be automatically created when you run the application, but you can pre-populate it with test data:
+
+```bash
+npm run setup-db
+```
+
+This will create sample players, games, and tournaments in the database.
+
+### Development Server
+
+Run the development server:
+
+```bash
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+## Database Structure
+
+The application uses a SQLite database with the following tables:
+
+1. **players** - Stores player information
+   - id: TEXT (Primary Key)
+   - name: TEXT
+   - current_game_id: TEXT (Foreign Key to games.id)
+   - tournament_id: TEXT (Foreign Key to tournaments.id)
+
+2. **games** - Stores game information
+   - id: TEXT (Primary Key)
+   - board: TEXT (JSON representing the game board)
+   - players: TEXT (JSON with player IDs for 'x' and 'o')
+   - current_turn: TEXT ('x' or 'o')
+   - winner: TEXT (Player ID of winner, if any)
+   - status: TEXT ('waiting', 'inProgress', 'completed', or 'abandoned')
+   - tournament_id: TEXT (Foreign Key to tournaments.id)
+   - next_round_game_id: TEXT (Foreign Key to games.id)
+
+3. **tournaments** - Stores tournament information
+   - id: TEXT (Primary Key)
+   - name: TEXT
+   - status: TEXT ('registering', 'inProgress', or 'completed')
+   - players: TEXT (JSON array of player IDs)
+   - games: TEXT (JSON array of game IDs)
+   - rounds: INTEGER
+   - current_round: INTEGER
+   - winner_id: TEXT (Player ID of tournament winner, if any)
+
+## Database Location
+
+The SQLite database is stored in:
+
+- Development: `./data/tictactoe-dev.db`
+- Production: `./data/tictactoe.db`
+
+The database files are excluded from Git in the `.gitignore` file.
