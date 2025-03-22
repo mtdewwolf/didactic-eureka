@@ -33,9 +33,9 @@ export default function Home() {
         }
         
         setTournaments(data.tournaments);
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error('Error fetching tournaments:', err);
-        setError(err.message || 'Failed to fetch tournaments');
+        setError(err instanceof Error ? err.message : 'Failed to fetch tournaments');
       } finally {
         setIsLoading(false);
       }
@@ -91,9 +91,9 @@ export default function Home() {
       
       // Select the new tournament
       setSelectedTournament(data.tournament.id);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error creating tournament:', err);
-      setError(err.message || 'Failed to create tournament');
+      setError(err instanceof Error ? err.message : 'Failed to create tournament');
     } finally {
       setIsLoading(false);
     }

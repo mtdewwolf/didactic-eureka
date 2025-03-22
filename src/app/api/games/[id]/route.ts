@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getGame, getPlayer, updateGame } from '@/lib/db';
+import { getGame, updateGame } from '@/lib/db';
 import { applyMove } from '@/lib/game-utils';
 import { GameMove } from '@/types';
 

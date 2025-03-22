@@ -40,9 +40,9 @@ const Tournament: React.FC<TournamentProps> = ({ tournamentId, currentPlayer }) 
         );
         
         setCurrentPlayerGame(playerGame || null);
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error('Error fetching tournament:', err);
-        setError(err.message || 'Failed to fetch tournament');
+        setError(err instanceof Error ? err.message : 'Failed to fetch tournament');
       } finally {
         setIsLoading(false);
       }
@@ -87,9 +87,9 @@ const Tournament: React.FC<TournamentProps> = ({ tournamentId, currentPlayer }) 
           setCurrentPlayerGame(playerGame);
         }
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error advancing tournament:', err);
-      alert(err.message || 'Failed to advance tournament');
+      alert(err instanceof Error ? err.message : 'Failed to advance tournament');
     }
   };
 

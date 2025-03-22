@@ -1,11 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServer } from 'http';
-import { Server as SocketIOServer } from 'socket.io';
 import { initSocketServer } from '@/lib/socket-server';
 
 // Create an HTTP server instance for Socket.io
 const httpServer = createServer();
-const io = initSocketServer(httpServer);
+initSocketServer(httpServer);
 
 // Start the server on a specific port (for development)
 if (process.env.NODE_ENV !== 'production') {
@@ -15,7 +14,7 @@ if (process.env.NODE_ENV !== 'production') {
   });
 }
 
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   return NextResponse.json({ 
     success: true, 
     message: 'Socket.io server is running',

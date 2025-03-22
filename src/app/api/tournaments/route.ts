@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createPlayer, createTournament as dbCreateTournament, getActiveTournaments, getTournament, getTournamentGames, updateTournament } from '@/lib/db';
-import { createTournament, generateNextRoundMatches } from '@/lib/game-utils';
-import { Player, Tournament } from '@/types';
+import { createPlayer, createTournament as dbCreateTournament, getActiveTournaments } from '@/lib/db';
+import { createTournament } from '@/lib/game-utils';
+import { Player } from '@/types';
 
 // Get all active tournaments
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
     const tournaments = await getActiveTournaments();
     return NextResponse.json({ success: true, tournaments });
